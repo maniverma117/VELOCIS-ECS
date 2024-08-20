@@ -160,6 +160,7 @@ To retrieve the latest ECS-optimized AMI ID for Amazon Linux 2023, use the follo
 ```bash
 aws ssm get-parameters --names /aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id --region ap-south-1 --query "Parameters[0].Value" --output text
 ```
+[links for architechture type](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/retrieve-ecs-optimized_AMI.html)
 
 
 
