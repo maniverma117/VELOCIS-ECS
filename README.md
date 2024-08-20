@@ -352,7 +352,7 @@ After the stack creation is complete, the following resources will be available:
 - The `HealthCheckPath` should be a valid path that your targets can respond to for health checks.
 - Modify the parameters during stack creation or update to further customize the target group configuration as needed.
 
-# ECS Service Launch Type EC2 CloudFormation
+# 6. ECS Service Launch Type EC2 CloudFormation
 
 This CloudFormation template creates an ECS Service running on EC2 instances. It includes configurations for CloudWatch Logs, container settings, environment variables, and integration with Load Balancers and Service Registries.
 
