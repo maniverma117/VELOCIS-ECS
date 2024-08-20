@@ -3,7 +3,7 @@
 
 1. Login to your AWS account.
 2. Provide the template URL:  
-   [VPC CloudFormation Template](https://cfn.vsplcloud.services/src/VPC.html)
+   [VELOCIS CFN](https://cfn.vsplcloud.services/src/VPC.html)
 3. Enter the required parameters based on your network configuration.
 4. Review and confirm the settings, then create the stack.
 
