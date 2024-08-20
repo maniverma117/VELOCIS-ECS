@@ -81,4 +81,82 @@ After the stack creation is complete, the following resources will be available:
 
 # 2. ASG CloudFormation
 
+This CloudFormation template creates an Auto Scaling Group (ASG) with the specified configurations, including desired capacity, instance type, and security groups. The template allows you to customize various parameters to meet your specific needs.
+
+## Parameters
+
+The following parameters can be customized when creating or updating the stack:
+
+### Auto Scaling Group Configuration
+
+- **AutoScalingGroupName**:  
+  _Description_: Name of the Auto Scaling Group.  
+  _Default_: `FE-APP`
+
+- **AvailabilityZone**:  
+  _Description_: Availability Zone for the instances.  
+  _Default_: `ap-south-2b`
+
+- **DesiredCapacity**:  
+  _Description_: Desired capacity of the Auto Scaling Group.  
+  _Default_: `2`
+
+- **IamInstanceProfile**:  
+  _Description_: The name of the IAM instance profile role to attach to the instances.  
+  _Default_: `AmazonEC2ContainerServiceforEC2Role`
+
+- **ImageId**:  
+  _Description_: The Amazon Machine Image (AMI) ID for the instances.  
+  _Note_: You can retrieve the latest ECS-optimized AMI ID using the command provided below.
+
+- **InstanceType**:  
+  _Description_: EC2 instance type.  
+  _Default_: `t3.medium`
+
+- **KeyName**:  
+  _Description_: The key name to use for SSH access to the instances.  
+  _Default_: `test-apache-bench`
+
+- **LaunchTemplateName**:  
+  _Description_: Name of the Launch Template.  
+  _Default_: `FE-APP-LT`
+
+- **MaxSize**:  
+  _Description_: Maximum size of the Auto Scaling Group.  
+  _Default_: `5`
+
+- **MinSize**:  
+  _Description_: Minimum size of the Auto Scaling Group.  
+  _Default_: `1`
+
+- **SecurityGroup**:  
+  _Description_: Security Group for the Launch Template.  
+  _Default_: `sg-01c8e1782b52bf3dd`
+
+- **UserData**:  
+  _Description_: Base64-encoded UserData script for instance initialization.  
+  _Default_: `IyEvYmluL2Jhc2gKZWNobyAiRUNTX0NMVVNURVI9TXlDbHVzdGVyIiA+PiAvZXRjL2Vjcy9lY3MuY29uZmlnCg==`
+
+- **VPCZoneIdentifier**:  
+  _Description_: List of subnet IDs for the Auto Scaling Group.  
+  _Example_: `subnet-0f1c6432b78501b25,subnet-0fdbd303a4af2afac`
+
+## How to get UserData
+
+#!/bin/bash
+echo "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config
+
+linux command to encode base64
+echo '#!/bin/bash\necho "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config' | base64
+
+## How to Retrieve the Latest ECS-Optimized AMI ID
+
+To retrieve the latest ECS-optimized AMI ID for Amazon Linux 2023, use the following AWS CLI command:
+
+```bash
+aws ssm get-parameters --names /aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id --region ap-south-1 --query "Parameters[0].Value" --output text
+
+
+
+
 
