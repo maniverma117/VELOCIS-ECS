@@ -1,4 +1,11 @@
 # VPC CloudFormation Stack
+## Usage
+
+1. Login to your AWS account.
+2. Provide the template URL:  
+   [VPC CloudFormation Template](https://cfn.vsplcloud.services/src/VPC.html)
+3. Enter the required parameters based on your network configuration.
+4. Review and confirm the settings, then create the stack.
 
 This CloudFormation template creates a Virtual Private Cloud (VPC) with both public and private subnets across multiple Availability Zones. The template supports customization through various parameters, allowing you to configure the VPC according to your requirements.
 
@@ -58,14 +65,7 @@ The following parameters can be customized when creating or updating the stack:
   _Description_: Enter the CIDR block for the third private subnet (Availability Zone 1c).  
   _Default_: `10.1.70.0/24`
 
-## Usage
 
-1. Open the CloudFormation console in your AWS account.
-2. Select "Create Stack" and choose "With new resources (standard)".
-3. Provide the template URL:  
-   [VPC CloudFormation Template](https://cfn.vsplcloud.services/src/VPC.html)
-4. Enter the required parameters based on your network configuration.
-5. Review and confirm the settings, then create the stack.
 
 ## Outputs
 
