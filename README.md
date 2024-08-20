@@ -142,6 +142,8 @@ The following parameters can be customized when creating or updating the stack:
   _Example_: `subnet-0f1c6432b78501b25,subnet-0fdbd303a4af2afac`
 
 ## How to get UserData
+url to encode or decode
+[url to encode or decode](https://www.base64decode.org/)
 ```
 #!/bin/bash
 echo "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config
