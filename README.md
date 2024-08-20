@@ -148,9 +148,9 @@ echo "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config
 
 linux command to encode base64
 
-```bash
+```
 echo '#!/bin/bash\necho "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config' | base64
-```bash
+```
 ## How to Retrieve the Latest ECS-Optimized AMI ID
 
 To retrieve the latest ECS-optimized AMI ID for Amazon Linux 2023, use the following AWS CLI command:
