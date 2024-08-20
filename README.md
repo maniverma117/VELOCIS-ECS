@@ -1,4 +1,4 @@
-# VPC CloudFormation Stack
+# 1. VPC CloudFormation
 ## Usage
 
 1. Login to your AWS account.
