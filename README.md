@@ -229,3 +229,49 @@ After the stack creation is complete, the following resources will be available:
 
 - Ensure that the provided ARNs for the Auto Scaling groups are correct and that the Auto Scaling groups are properly configured for use as ECS capacity providers.
 - You can modify the parameters during stack creation or update to customize the ECS cluster configuration further.
+
+# 4. ALB CloudFormation
+
+This CloudFormation template creates an Application Load Balancer (ALB) with specified configuration options, including SSL certificates, subnets, and VPC associations. The template allows you to customize various parameters to suit your network and security requirements.
+
+## Parameters
+
+The following parameters can be customized when creating or updating the stack:
+
+### ALB Configuration
+
+- **CertificateArn**:  
+  _Description_: The ARN of the SSL certificate to associate with the ALB.  
+  _Example_: `arn:aws:acm:region:account-id:certificate/xxxxxxxxxxx`
+
+- **LoadBalancerName**:  
+  _Description_: The name of the Application Load Balancer.  
+  _Default_: `DEMO`
+
+- **Scheme**:  
+  _Description_: The scheme of the ALB, specifying whether it is internet-facing or internal.  
+  _Default_: `internet-facing`  
+  _Options_: `internet-facing` or `internal`
+
+- **Subnets**:  
+  _Description_: A comma-separated list of subnet IDs where the ALB will be deployed.  
+  _Example_: `subnet-0f1c6432b78501b25,subnet-0fdbd303a4af2afac`
+
+### VPC Configuration
+
+- **VpcId**:  
+  _Description_: The ID of the VPC where the ALB and associated security group will be deployed.  
+  _Example_: `vpc-09449c77e104c511b`
+
+## Outputs
+
+After the stack creation is complete, the following resources will be available:
+- An Application Load Balancer with the specified name, scheme, and associated SSL certificate.
+- The ALB will be deployed in the specified subnets within the provided VPC.
+
+## Notes
+
+- Ensure that the SSL certificate ARN provided is valid and associated with the correct region.
+- The subnets provided must be part of the specified VPC.
+- Modify the parameters during stack creation or update to further customize the ALB configuration as needed.
+
