@@ -158,7 +158,7 @@ echo "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config
 linux command to encode base64
 
 ```
-echo '#!/bin/bash\necho "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config' | base64
+echo -e '#!/bin/bash\necho "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config' | base64
 ```
 ## How to Retrieve the Latest ECS-Optimized AMI ID
 
