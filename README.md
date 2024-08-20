@@ -142,10 +142,10 @@ The following parameters can be customized when creating or updating the stack:
   _Example_: `subnet-0f1c6432b78501b25,subnet-0fdbd303a4af2afac`
 
 ## How to get UserData
-
+```
 #!/bin/bash
 echo "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config
-
+```
 linux command to encode base64
 
 ```
