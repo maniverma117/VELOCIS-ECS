@@ -172,3 +172,60 @@ aws ssm get-parameters --names /aws/service/ecs/optimized-ami/amazon-linux-2023/
 
 
 # 3. ECS CloudFormation
+
+
+This CloudFormation template creates an Amazon ECS cluster with associated capacity providers and a private DNS namespace. It allows you to configure various parameters to meet the specific requirements of your ECS environment.
+
+## Parameters
+
+The following parameters can be customized when creating or updating the stack:
+
+### ECS Capacity Providers
+
+- **AutoScalingGroupArn**:  
+  _Description_: The ARN of the Auto Scaling group associated with the first capacity provider.  
+  _Example_: `arn:aws:autoscaling:region:account-id:autoScalingGroup:autoScalingGroupName/xxxxxxxxxxxxx1`
+
+- **AutoScalingGroupArn2**:  
+  _Description_: The ARN of the Auto Scaling group associated with the second capacity provider.  
+  _Example_: `arn:aws:autoscaling:region:account-id:autoScalingGroup:autoScalingGroupName/xxxxxxxxxxxxx1`
+
+- **CapacityProviderName**:  
+  _Description_: The name of the first ECS capacity provider.  
+  _Default_: `FE`
+
+- **CapacityProviderName2**:  
+  _Description_: The name of the second ECS capacity provider.  
+  _Default_: `BE`
+
+- **CapacityProviders**:  
+  _Description_: A comma-separated list of capacity providers for the ECS cluster.  
+  _Example_: `FARGATE,FARGATE_SPOT,FE,BE`
+
+### ECS Cluster Configuration
+
+- **ClusterName**:  
+  _Description_: The name of the ECS cluster.  
+  _Default_: `DEMO`
+
+### Private DNS Namespace Configuration
+
+- **NamespaceName**:  
+  _Description_: The name of the private DNS namespace for service discovery within the VPC.  
+  _Default_: `demo.internal`
+
+- **VpcId**:  
+  _Description_: The VPC ID to associate with the namespace.  
+  _Example_: `vpc-09449c77e104c511b`
+
+
+## Outputs
+
+After the stack creation is complete, the following resources will be available:
+- An ECS cluster with the specified name and capacity providers.
+- A private DNS namespace associated with the specified VPC.
+
+## Notes
+
+- Ensure that the provided ARNs for the Auto Scaling groups are correct and that the Auto Scaling groups are properly configured for use as ECS capacity providers.
+- You can modify the parameters during stack creation or update to customize the ECS cluster configuration further.
