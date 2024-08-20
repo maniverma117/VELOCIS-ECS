@@ -147,15 +147,17 @@ The following parameters can be customized when creating or updating the stack:
 echo "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config
 
 linux command to encode base64
-echo '#!/bin/bash\necho "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config' | base64
 
+```bash
+echo '#!/bin/bash\necho "ECS_CLUSTER=Statging" >> /etc/ecs/ecs.config' | base64
+```bash
 ## How to Retrieve the Latest ECS-Optimized AMI ID
 
 To retrieve the latest ECS-optimized AMI ID for Amazon Linux 2023, use the following AWS CLI command:
 
 ```bash
 aws ssm get-parameters --names /aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id --region ap-south-1 --query "Parameters[0].Value" --output text
-
+```
 
 
 
