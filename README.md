@@ -79,6 +79,13 @@ After the stack creation is complete, the following resources will be available:
 - Ensure that the CIDR blocks provided do not overlap with existing VPCs in your account.
 - You can modify the parameters during stack creation or update to customize the network configuration further.
 
+
+
+
+
+
+
+
 # 2. ASG CloudFormation
 
 This CloudFormation template creates an Auto Scaling Group (ASG) with the specified configurations, including desired capacity, instance type, and security groups. The template allows you to customize various parameters to meet your specific needs.
