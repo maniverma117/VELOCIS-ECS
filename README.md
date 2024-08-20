@@ -59,3 +59,26 @@ The following parameters can be customized when creating or updating the stack:
   _Default_: `10.1.70.0/24`
 
 ## Usage
+
+1. Open the CloudFormation console in your AWS account.
+2. Select "Create Stack" and choose "With new resources (standard)".
+3. Provide the template URL:  
+   [VPC CloudFormation Template](https://cfn.vsplcloud.services/src/VPC.html)
+4. Enter the required parameters based on your network configuration.
+5. Review and confirm the settings, then create the stack.
+
+## Outputs
+
+After the stack creation is complete, the following resources will be available:
+- A custom VPC with the specified CIDR block.
+- Public and private subnets across the specified Availability Zones.
+- Optionally, a NAT Gateway if enabled.
+
+## Notes
+
+- Ensure that the CIDR blocks provided do not overlap with existing VPCs in your account.
+- You can modify the parameters during stack creation or update to customize the network configuration further.
+
+## License
+
+This project is licensed under the MIT License.
