@@ -275,3 +275,82 @@ After the stack creation is complete, the following resources will be available:
 - The subnets provided must be part of the specified VPC.
 - Modify the parameters during stack creation or update to further customize the ALB configuration as needed.
 
+# Elastic Load Balancer (ELB) Target Group (TG) CloudFormation Stack
+
+This CloudFormation template creates an Elastic Load Balancer (ELB) Target Group (TG) with specified configurations, including listener rules, health checks, and target registrations. It allows you to customize various parameters to tailor the target group to your application's needs.
+
+## Parameters
+
+The following parameters can be customized when creating or updating the stack:
+
+### Listener Rule Conditions
+
+- **ConditionField1**:  
+  _Description_: The first field for the listener rule condition (e.g., `path-pattern`, `host-header`).  
+  _Default_: `path-pattern`
+
+- **ConditionField2**:  
+  _Description_: The second field for the listener rule condition (e.g., `path-pattern`, `host-header`).  
+  _Default_: `host-header`
+
+- **ConditionValues1**:  
+  _Description_: The values for the first listener rule condition (e.g., `/*`, `*.example.com`).  
+  _Default_: `/*`
+
+- **ConditionValues2**:  
+  _Description_: The values for the second listener rule condition (e.g., `/*`, `*.example.com`).  
+  _Default_: `dev.example.com`
+
+### Target Group Configuration
+
+- **HealthCheckPath**:  
+  _Description_: The path used for health checks on the target group.  
+  _Default_: `/`
+
+- **ListenerArn**:  
+  _Description_: The ARN of the existing listener on port 443.  
+  _Example_: `arn:aws:elasticloadbalancing:region:account-id:listener/app/xxxxxxxxxxxxx`
+
+- **MatcherHttpCode**:  
+  _Description_: The HTTP codes to use when checking for a healthy response from a target.  
+  _Default_: `200-399`
+
+- **Priority**:  
+  _Description_: The priority for the listener rule.  
+  _Default_: `10`
+
+- **Protocol**:  
+  _Description_: The protocol used by the target group.  
+  _Default_: `HTTP`
+
+- **TargetGroupName**:  
+  _Description_: The name of the target group.  
+  _Default_: `APP-TG`
+
+- **TargetGroupPort**:  
+  _Description_: The port on which the target group will receive traffic.  
+  _Default_: `80`
+
+- **TargetType**:  
+  _Description_: The type of targets that you must specify when registering targets with this target group (instance, ip, lambda).  
+  _Default_: `ip`
+
+- **VPCId**:  
+  _Description_: The VPC ID where the target group will be created.  
+  _Example_: `vpc-09449c77e104c511b`
+
+
+## Outputs
+
+After the stack creation is complete, the following resources will be available:
+- An Elastic Load Balancer (ELB) Target Group with the specified configuration.
+- Listener rules with the defined conditions and priority.
+
+## Notes
+
+- Ensure that the `ListenerArn` provided corresponds to an existing listener.
+- The `HealthCheckPath` should be a valid path that your targets can respond to for health checks.
+- Modify the parameters during stack creation or update to further customize the target group configuration as needed.
+
+
+
