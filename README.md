@@ -275,7 +275,7 @@ After the stack creation is complete, the following resources will be available:
 - The subnets provided must be part of the specified VPC.
 - Modify the parameters during stack creation or update to further customize the ALB configuration as needed.
 
-# Elastic Load Balancer (ELB) Target Group (TG) CloudFormation Stack
+# 5. Elastic Load Balancer (ELB) Target Group (TG) CloudFormation Stack
 
 This CloudFormation template creates an Elastic Load Balancer (ELB) Target Group (TG) with specified configurations, including listener rules, health checks, and target registrations. It allows you to customize various parameters to tailor the target group to your application's needs.
 
