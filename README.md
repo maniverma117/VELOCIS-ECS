@@ -352,5 +352,99 @@ After the stack creation is complete, the following resources will be available:
 - The `HealthCheckPath` should be a valid path that your targets can respond to for health checks.
 - Modify the parameters during stack creation or update to further customize the target group configuration as needed.
 
+# ECS Service Launch Type EC2 CloudFormation
 
+This CloudFormation template creates an ECS Service running on EC2 instances. It includes configurations for CloudWatch Logs, container settings, environment variables, and integration with Load Balancers and Service Registries.
+
+## Parameters
+
+The following parameters can be customized when creating or updating the stack:
+
+### ECS Service Configuration
+
+- **AwsLogsRegion**:  
+  _Description_: The AWS region for CloudWatch Logs.  
+  _Default_: `ap-south-2`
+
+- **CapacityProvider**:  
+  _Description_: The ECS Capacity Provider to be used.  
+  _Default_: `FE`
+
+- **Cluster**:  
+  _Description_: The name of the ECS Cluster where the service will be deployed.  
+  _Default_: `DEMO`
+
+- **ContainerName**:  
+  _Description_: The name of the container within the task definition.  
+  _Default_: `FE`
+
+- **ContainerPort**:  
+  _Description_: The port on the container that the service will use.  
+  _Default_: `80`
+
+- **Cpu**:  
+  _Description_: The CPU units allocated for the container.  
+  _Default_: `100`  
+  _Options_: `'256'`, `'512'`, `'1024'`, etc.
+
+- **Environment**:  
+  _Description_: Environment variables for the container.  
+  _Default_: `Enter CommaDelimitedList`
+
+- **EnvironmentFiles**:  
+  _Description_: List of S3 URIs for environment files to be used by the container.  
+  _Default_: `None`
+
+- **ExecutionRoleArn**:  
+  _Description_: The ARN of the Task Execution Role.  
+  _Default_: `arn:aws:iam::267891377259:role/ecsTaskExecutionRole`
+
+- **Image**:  
+  _Description_: URL of the Docker image to be used in the container.  
+  _Example_: `nginx`
+
+- **Memory**:  
+  _Description_: Memory (in MiB) allocated for the container.  
+  _Default_: `128`  
+  _Options_: `'512'`, `'1024'`, `'2048'`, etc.
+
+- **RegistryArn**:  
+  _Description_: ARN of the Service Registry for service discovery.  
+  _Default_: `arn:aws:servicediscovery:ap-south-2:267891377259:service/srv-4ukjppecopecb56l`
+
+- **SecurityGroups**:  
+  _Description_: Security groups for the network configuration.  
+  _Default_: `sg-01c8e1782b52bf3dd`
+
+- **ServiceName**:  
+  _Description_: The name of the ECS service.  
+  _Default_: `FE`
+
+- **Subnets**:  
+  _Description_: A comma-separated list of subnet IDs where the service will be deployed.  
+  _Default_: `subnet-0f1c6432b78501b25,subnet-0fdbd303a4af2afac`
+
+- **TargetGroupArn**:  
+  _Description_: The ARN of the Target Group for the Load Balancer.  
+  _Default_: `arn:aws:elasticloadbalancing:ap-south-2:267891377259:targetgroup/FE-APP-TG/14dd65ff0a88b243`
+
+- **TaskDefinitionFamily**:  
+  _Description_: The ECS Task Definition Family and Name.  
+  _Default_: `FE`
+
+- **TaskRoleArn**:  
+  _Description_: The ARN of the Task Role.  
+  _Default_: `arn:aws:iam::267891377259:role/ecsTaskExecutionRole`
+
+## Outputs
+
+After the stack creation is complete, the following resources will be available:
+- An ECS Service running on EC2 instances with the specified configurations.
+- Integration with CloudWatch Logs, Service Registry, and Load Balancer.
+
+## Notes
+
+- Ensure that the provided `ExecutionRoleArn` and `TaskRoleArn` are valid and have the necessary permissions.
+- Verify that the Docker image URL and environment variables are correctly configured for your container.
+- The `TargetGroupArn` should be associated with a valid Application Load Balancer.
 
