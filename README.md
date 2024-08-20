@@ -79,6 +79,6 @@ After the stack creation is complete, the following resources will be available:
 - Ensure that the CIDR blocks provided do not overlap with existing VPCs in your account.
 - You can modify the parameters during stack creation or update to customize the network configuration further.
 
-## License
+# 2. ASG CloudFormation
 
-This project is licensed under the MIT License.
+
