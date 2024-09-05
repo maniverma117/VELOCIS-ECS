@@ -446,5 +446,5 @@ After the stack creation is complete, the following resources will be available:
 
 - Ensure that the provided `ExecutionRoleArn` and `TaskRoleArn` are valid and have the necessary permissions.
 - Verify that the Docker image URL and environment variables are correctly configured for your container.
-- The `TargetGroupArn` should be associated with a valid Application Load Balancer.
+- The `TargetGroupArn` should be associated with a valid Application Load Balancer. ##
 
