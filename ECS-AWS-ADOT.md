@@ -107,51 +107,69 @@ ecs-adot-task-role
 
 ```json
 {
-  "family": "adot-collector",
-  "networkMode": "bridge",
-  "requiresCompatibilities": ["EC2"],
-  "cpu": "256",
-  "memory": "512",
-  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecs-adot-task-role",
-  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/ecsTaskExecutionRole",
-  "containerDefinitions": [
-    {
-      "name": "adot-collector",
-      "image": "public.ecr.aws/aws-observability/aws-otel-collector:latest",
-      "essential": true,
-      "portMappings": [
+    "family": "adot-collector",
+    "taskRoleArn": "arn:aws:iam::xxxxxxxxx:role/ecs-adot-task-role",
+    "executionRoleArn": "arn:aws:iam::xxxxxxxxx:role/ecsTaskExecutionRole",
+    "networkMode": "bridge",
+    "requiresCompatibilities": ["EC2"],
+    "cpu": "256",
+    "memory": "512",
+    "containerDefinitions": [
         {
-          "containerPort": 4317,
-          "hostPort": 4317,
-          "protocol": "tcp"
-        },
+            "name": "adot-collector",
+            "image": "public.ecr.aws/aws-observability/aws-otel-collector:latest",
+            "cpu": 0,
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 4317,
+                    "hostPort": 4317,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 4318,
+                    "hostPort": 4318,
+                    "protocol": "tcp"
+                },
+                {
+                    "containerPort": 4316,
+                    "hostPort": 4316,
+                    "protocol": "tcp"
+                }
+            ],
+            "command": [
+                "--config",
+                "env:AOT_CONFIG_CONTENT"
+            ],
+            "environment": [
+                {
+                    "name": "AOT_CONFIG_CONTENT",
+                    "value": "receivers:\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:4317\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n  resourcedetection:\n    detectors: [env, ecs, ec2]\n    timeout: 2s\n    override: false\n\nexporters:\n  awsxray:\n    region: \"ap-south-1\"\n  awsemf:\n    namespace: \"aws/application_signals/metrics\"\n    log_group_name: \"/aws/application-signals/data\"\n    log_stream_name: \"{TaskId}\"\n    region: \"ap-south-1\"\n    dimension_rollup_option: NoDimensionRollup\n    metric_declarations:\n      - dimensions:\n          - [\"Service\", \"Operation\", \"RemoteService\", \"RemoteOperation\"]\n          - [\"Service\", \"Operation\"]\n          - [\"Service\", \"RemoteService\"]\n          - [\"Service\"]\n        metric_name_selectors:\n          - \"latency\"\n          - \"error\"\n          - \"fault\"\n          - \"success_rate\"\n\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [batch, resourcedetection]\n      exporters: [awsxray]\n    metrics:\n      receivers: [otlp]\n      processors: [batch, resourcedetection]\n      exporters: [awsemf]\n  telemetry:\n    logs:\n      level: \"info\""
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/adot-collector",
+                    "awslogs-region": "ap-south-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "systemControls": []
+        }
+    ],
+    "volumes": [],
+    "placementConstraints": [],
+    "tags": [
         {
-          "containerPort": 4318,
-          "hostPort": 4318,
-          "protocol": "tcp"
+            "key": "Environment",
+            "value": "dev"
         }
-      ],
-      "environment": [
-        {
-          "name": "AOT_CONFIG_CONTENT",
-          "value": "receivers:\n  otlp:\n    protocols:\n      grpc:\n        endpoint: 0.0.0.0:4317\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n\nexporters:\n  awsxray: {}\n\nservice:\n  pipelines:\n    traces:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [awsxray]"
-        }
-      ],
-      "command": [
-        "--config",
-        "env:AOT_CONFIG_CONTENT"
-      ],
-      "logConfiguration": {
-        "logDriver": "awslogs",
-        "options": {
-          "awslogs-group": "/ecs/adot-collector",
-          "awslogs-region": "ap-south-1",
-          "awslogs-stream-prefix": "ecs"
-        }
-      }
-    }
-  ]
+    ]
 }
+ 
 ```
 
 ---
