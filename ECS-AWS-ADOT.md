@@ -222,11 +222,15 @@ CMD ["java",
 ## ECS Environment Variables
 
 ```
-OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
-OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-OTEL_TRACES_EXPORTER=otlp
-OTEL_SERVICE_NAME=<service-name>
-OTEL_RESOURCE_ATTRIBUTES: deployment.environment=stg,service.name=<service-name>
+ENV OTEL_EXPORTER_OTLP_ENDPOINT=http://172.17.0.1:4317
+ENV OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+ENV OTEL_TRACES_EXPORTER=otlp
+ENV OTEL_METRICS_EXPORTER=otlp        # ← changed from none
+ENV OTEL_LOGS_EXPORTER=none
+ENV OTEL_SERVICE_NAME=xxxxxxxxxxxxxxxx
+ENV OTEL_RESOURCE_ATTRIBUTES=deployment.environment=dev,service.name=xxxxxxxxxxxxxxxx
+ENV OTEL_AWS_APPLICATION_SIGNALS_ENABLED=true    # ← add this
+ENV OTEL_AWS_APPLICATION_SIGNALS_EXPORTER_ENDPOINT=http://172.17.0.1:4316  # ← add this
 ```
 
 ---
