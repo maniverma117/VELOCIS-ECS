@@ -41,16 +41,59 @@ receivers:
 
 processors:
   batch:
+  resourcedetection:
+    detectors:
+      - env
+      - ecs
+      - ec2
+    timeout: 2s
+    override: false
 
 exporters:
-  awsxray: {}
+  awsxray:
+    region: ap-south-1
+
+  awsemf:
+    namespace: aws/application_signals/metrics
+    log_group_name: /aws/application-signals/data
+    log_stream_name: "{TaskId}"
+    region: ap-south-1
+    dimension_rollup_option: NoDimensionRollup
+    metric_declarations:
+      - dimensions:
+          - ["Service", "Operation", "RemoteService", "RemoteOperation"]
+          - ["Service", "Operation"]
+          - ["Service", "RemoteService"]
+          - ["Service"]
+        metric_name_selectors:
+          - latency
+          - error
+          - fault
+          - success_rate
 
 service:
   pipelines:
     traces:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [awsxray]
+      receivers:
+        - otlp
+      processors:
+        - batch
+        - resourcedetection
+      exporters:
+        - awsxray
+
+    metrics:
+      receivers:
+        - otlp
+      processors:
+        - batch
+        - resourcedetection
+      exporters:
+        - awsemf
+
+  telemetry:
+    logs:
+      level: info
 ````
 
 ---
