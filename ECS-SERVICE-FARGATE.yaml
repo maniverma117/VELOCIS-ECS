@@ -8,9 +8,9 @@ Parameters:
     Type: String
     Description: ECS Cluster Name
 
-  ServiceRegistryArn:
-  Type: String
-  Description: Existing Cloud Map Service ARN
+  NamespaceId:
+    Type: String
+    Description: Existing Cloud Map Namespace ID
 
   NamespaceName:
     Type: String
@@ -52,17 +52,17 @@ Parameters:
 
   Cpu:
     Type: String
-    Default: "256"
+    Default: '256'
     AllowedValues:
-      - "256"
-      - "512"
-      - "1024"
-      - "2048"
-      - "4096"
+      - '256'
+      - '512'
+      - '1024'
+      - '2048'
+      - '4096'
 
   Memory:
     Type: String
-    Default: "512"
+    Default: '512'
     Description: Task Memory in MiB
 
   DesiredCount:
@@ -152,7 +152,7 @@ Resources:
             LogDriver: awslogs
 
             Options:
-              awslogs-group: !Sub '/ecs/${ServiceName}'
+              awslogs-group: !Sub /ecs/${ServiceName}
               awslogs-region: !Ref AwsLogsRegion
               awslogs-stream-prefix: ecs
               awslogs-create-group: 'true'
@@ -217,9 +217,8 @@ Resources:
 
       ServiceRegistries:
 
-        - RegistryArn: !Ref ServiceRegistryArn
+        - RegistryArn: !GetAtt DiscoveryService.Arn
           ContainerName: !Ref ContainerName
-          ContainerPort: !Ref ContainerPort
 
       EnableECSManagedTags: true
 
@@ -246,4 +245,4 @@ Outputs:
 
   ServiceDiscoveryURL:
     Description: Internal Service Discovery URL
-    Value: !Sub '${ServiceName}.${NamespaceName}'
+    Value: !Sub ${ServiceName}.${NamespaceName}
