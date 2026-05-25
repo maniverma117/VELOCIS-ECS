@@ -1,0 +1,249 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: ECS Fargate Service with Cloud Map Service Discovery
+
+Parameters:
+
+  ClusterName:
+    Type: String
+    Description: ECS Cluster Name
+
+  ServiceRegistryArn:
+  Type: String
+  Description: Existing Cloud Map Service ARN
+
+  NamespaceName:
+    Type: String
+    Default: demo.internal
+    Description: Existing Cloud Map Namespace Name
+
+  ServiceName:
+    Type: String
+    Description: ECS Service Name
+
+  TaskDefinitionFamily:
+    Type: String
+    Description: ECS Task Definition Family
+
+  ContainerName:
+    Type: String
+    Description: Container Name
+
+  Image:
+    Type: String
+    Description: ECR Image URL
+
+  ContainerPort:
+    Type: Number
+    Default: 80
+    Description: Container Port
+
+  TargetGroupArn:
+    Type: String
+    Description: ALB Target Group ARN
+
+  ExecutionRoleArn:
+    Type: String
+    Description: ECS Task Execution Role ARN
+
+  TaskRoleArn:
+    Type: String
+    Description: ECS Task Role ARN
+
+  Cpu:
+    Type: String
+    Default: "256"
+    AllowedValues:
+      - "256"
+      - "512"
+      - "1024"
+      - "2048"
+      - "4096"
+
+  Memory:
+    Type: String
+    Default: "512"
+    Description: Task Memory in MiB
+
+  DesiredCount:
+    Type: Number
+    Default: 1
+
+  AwsLogsRegion:
+    Type: String
+    Default: ap-south-1
+
+  Subnets:
+    Type: CommaDelimitedList
+    Description: Subnet IDs
+
+  SecurityGroups:
+    Type: CommaDelimitedList
+    Description: Security Group IDs
+
+Resources:
+
+  #########################################################
+  # CLOUD MAP SERVICE
+  #########################################################
+
+  DiscoveryService:
+    Type: AWS::ServiceDiscovery::Service
+
+    Properties:
+
+      Name: !Ref ServiceName
+
+      NamespaceId: !Ref NamespaceId
+
+      DnsConfig:
+
+        RoutingPolicy: MULTIVALUE
+
+        DnsRecords:
+          - Type: A
+            TTL: 60
+
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+
+  #########################################################
+  # ECS TASK DEFINITION
+  #########################################################
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+
+    Properties:
+
+      Family: !Ref TaskDefinitionFamily
+
+      RequiresCompatibilities:
+        - FARGATE
+
+      NetworkMode: awsvpc
+
+      Cpu: !Ref Cpu
+
+      Memory: !Ref Memory
+
+      ExecutionRoleArn: !Ref ExecutionRoleArn
+
+      TaskRoleArn: !Ref TaskRoleArn
+
+      RuntimePlatform:
+        OperatingSystemFamily: LINUX
+        CpuArchitecture: X86_64
+
+      ContainerDefinitions:
+
+        - Name: !Ref ContainerName
+
+          Image: !Ref Image
+
+          Essential: true
+
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+              Protocol: tcp
+
+          LogConfiguration:
+
+            LogDriver: awslogs
+
+            Options:
+              awslogs-group: !Sub '/ecs/${ServiceName}'
+              awslogs-region: !Ref AwsLogsRegion
+              awslogs-stream-prefix: ecs
+              awslogs-create-group: 'true'
+
+  #########################################################
+  # ECS SERVICE
+  #########################################################
+
+  ECSService:
+    Type: AWS::ECS::Service
+
+    DependsOn:
+      - DiscoveryService
+
+    Properties:
+
+      Cluster: !Ref ClusterName
+
+      ServiceName: !Ref ServiceName
+
+      DesiredCount: !Ref DesiredCount
+
+      TaskDefinition: !Ref TaskDefinition
+
+      EnableExecuteCommand: true
+
+      CapacityProviderStrategy:
+
+        - CapacityProvider: FARGATE
+          Weight: 1
+
+      DeploymentController:
+        Type: ECS
+
+      DeploymentConfiguration:
+
+        DeploymentCircuitBreaker:
+          Enable: true
+          Rollback: true
+
+        MaximumPercent: 200
+
+        MinimumHealthyPercent: 50
+
+      HealthCheckGracePeriodSeconds: 120
+
+      NetworkConfiguration:
+
+        AwsvpcConfiguration:
+
+          AssignPublicIp: DISABLED
+
+          Subnets: !Ref Subnets
+
+          SecurityGroups: !Ref SecurityGroups
+
+      LoadBalancers:
+
+        - TargetGroupArn: !Ref TargetGroupArn
+          ContainerName: !Ref ContainerName
+          ContainerPort: !Ref ContainerPort
+
+      ServiceRegistries:
+
+        - RegistryArn: !Ref ServiceRegistryArn
+          ContainerName: !Ref ContainerName
+          ContainerPort: !Ref ContainerPort
+
+      EnableECSManagedTags: true
+
+      PropagateTags: TASK_DEFINITION
+
+      Tags:
+
+        - Key: Environment
+          Value: Production
+
+Outputs:
+
+  DiscoveryServiceArn:
+    Description: Cloud Map Service ARN
+    Value: !GetAtt DiscoveryService.Arn
+
+  ECSServiceArn:
+    Description: ECS Service ARN
+    Value: !Ref ECSService
+
+  TaskDefinitionArn:
+    Description: ECS Task Definition ARN
+    Value: !Ref TaskDefinition
+
+  ServiceDiscoveryURL:
+    Description: Internal Service Discovery URL
+    Value: !Sub '${ServiceName}.${NamespaceName}'
